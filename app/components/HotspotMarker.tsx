@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import * as THREE from "three";
+import { useFrame } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import { Hotspot, normalizedToWorld } from "../lib/hotspots";
 
@@ -12,10 +13,53 @@ type HotspotMarkerProps = {
 
 export default function HotspotMarker({ data, box }: HotspotMarkerProps) {
   const [open, setOpen] = useState(false);
-  const worldPosition = normalizedToWorld(box, data.position);
+  const [hidden, setHidden] = useState(false);
+  const hiddenRef = useRef(false);
+  const worldPosition = useMemo(() => normalizedToWorld(box, data.position), [box, data.position]);
+  const center = useMemo(() => box.getCenter(new THREE.Vector3()), [box]);
+
+  // Which way this part of the bike "faces" horizontally — approximated as the direction
+  // from the bike's center out to this hotspot's own surface position, flattened onto the
+  // XZ plane (rotating the camera around the bike is an azimuthal move; height shouldn't
+  // make a low part like the engine read as "behind" a high one like the seat). A
+  // raycast-based occlusion test (tried first) checked against the bike's full 583-mesh
+  // detail and falsely hid markers blocked by their own neighboring parts (mirrors,
+  // cables, trim). Comparing the camera's direction against this facing vector instead
+  // only cares about which side of the bike the camera has orbited to.
+  const facingDir = useMemo(() => {
+    const flat = new THREE.Vector3(worldPosition.x - center.x, 0, worldPosition.z - center.z);
+    // Hotspots near the vertical centerline (e.g. the engine) don't have a meaningful
+    // front/back side — normalizing a near-zero vector gives an unstable direction, so
+    // leave those permanently visible instead of guessing.
+    return flat.lengthSq() > 0.02 ? flat.normalize() : null;
+  }, [worldPosition, center]);
+
+  useFrame(({ camera }) => {
+    if (!facingDir) return;
+    const toCamera = new THREE.Vector3(
+      camera.position.x - center.x,
+      0,
+      camera.position.z - center.z
+    ).normalize();
+    const shouldHide = toCamera.dot(facingDir) < -0.5;
+    if (shouldHide !== hiddenRef.current) {
+      hiddenRef.current = shouldHide;
+      setHidden(shouldHide);
+      if (shouldHide) setOpen(false);
+    }
+  });
 
   return (
-    <Html position={worldPosition} center zIndexRange={[20, 0]}>
+    <Html
+      position={worldPosition}
+      center
+      style={{
+        transition: "opacity 0.15s ease",
+        opacity: hidden ? 0 : 1,
+        pointerEvents: hidden ? "none" : "auto",
+      }}
+      zIndexRange={[20, 0]}
+    >
       <div
         className="relative flex items-center justify-center"
         onMouseEnter={() => setOpen(true)}

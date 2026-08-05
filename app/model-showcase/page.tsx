@@ -3,6 +3,7 @@
 import { useState } from "react";
 import FloatingNav from "../components/FloatingNav";
 import BikeScene, { type CameraPreset } from "../components/BikeScene";
+import ForestBackdrop from "../components/ForestBackdrop";
 
 const COLORS = [
   { name: "Racing Blue", value: "#1f3a63" },
@@ -20,10 +21,13 @@ const VIEWS: { label: string; preset: CameraPreset }[] = [
 export default function ModelShowcasePage() {
   const [color, setColor] = useState(COLORS[0].value);
   const [preset, setPreset] = useState<CameraPreset | null>(null);
+  const [showBackground, setShowBackground] = useState(false);
 
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-surface-grey">
-      <BikeScene color={color} preset={preset} className="absolute inset-0" />
+      <BikeScene color={color} preset={preset} className="absolute inset-0">
+        {showBackground && <ForestBackdrop />}
+      </BikeScene>
 
       <div className="absolute top-6 right-6 flex flex-col gap-3">
         <div className="flex gap-2 rounded-full border border-white/10 bg-black/60 p-2 backdrop-blur-md">
@@ -53,6 +57,18 @@ export default function ModelShowcasePage() {
             </button>
           ))}
         </div>
+
+        <button
+          type="button"
+          onClick={() => setShowBackground((v) => !v)}
+          className={`rounded-full border border-white/10 px-4 py-2 text-xs font-medium backdrop-blur-md transition-colors ${
+            showBackground
+              ? "bg-neon-red text-white"
+              : "bg-black/60 text-zinc-300 hover:bg-white/10 hover:text-white"
+          }`}
+        >
+          Background: {showBackground ? "On" : "Off"}
+        </button>
       </div>
 
       <FloatingNav />

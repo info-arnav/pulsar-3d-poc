@@ -87,6 +87,13 @@ export default function BikeScene({
           intensity={1.8}
           castShadow
           shadow-mapSize={[2048, 2048]}
+          shadow-camera-left={-4}
+          shadow-camera-right={4}
+          shadow-camera-top={4}
+          shadow-camera-bottom={-4}
+          shadow-camera-near={0.5}
+          shadow-camera-far={12}
+          shadow-bias={-0.0004}
         />
         <Suspense fallback={null}>
           <BikeModel
