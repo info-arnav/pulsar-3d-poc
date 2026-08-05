@@ -1,22 +1,28 @@
 @import "tailwindcss";
 
+/* Palette pulled from bajajauto.com/pulsarunderground: cyber-black bg, red accent, electric-blue secondary. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #3a3a3e;
+  --foreground: #f5f5f5;
+  --cyber-black: #0a0a0a;
+  --dark-gray: #1a1a1a;
+  --surface-grey: #3a3a3e;
+  --neon-red: #fe0100;
+  --neon-red-dim: #e9000d;
+  --electric-blue: #00e5ff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-cyber-black: var(--cyber-black);
+  --color-dark-gray: var(--dark-gray);
+  --color-surface-grey: var(--surface-grey);
+  --color-neon-red: var(--neon-red);
+  --color-neon-red-dim: var(--neon-red-dim);
+  --color-electric-blue: var(--electric-blue);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
