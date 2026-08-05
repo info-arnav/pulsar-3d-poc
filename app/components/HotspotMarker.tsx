@@ -30,9 +30,33 @@ export default function HotspotMarker({ data, box }: HotspotMarkerProps) {
           }`}
         />
         {open && (
-          <div className="pointer-events-none absolute bottom-full left-1/2 mb-3 w-48 -translate-x-1/2 rounded-lg border border-white/10 bg-dark-gray/95 p-3 text-left text-white shadow-xl">
-            <p className="text-sm font-semibold">{data.label}</p>
-            <p className="mt-1 text-xs leading-snug text-zinc-400">{data.description}</p>
+          // Card + spacer share one hoverable box (flex-col, no gap) so the mouse
+          // never crosses dead space on the way from the dot up to the card.
+          <div
+            className="absolute bottom-full left-1/2 flex -translate-x-1/2 flex-col items-center"
+            onMouseEnter={() => setOpen(true)}
+            onMouseLeave={() => setOpen(false)}
+          >
+            <div
+              className={`rounded-lg border border-white/10 bg-dark-gray/95 p-3 text-left text-white shadow-xl ${
+                data.youtubeId ? "w-72 pointer-events-auto" : "w-48 pointer-events-none"
+              }`}
+            >
+              <p className="text-sm font-semibold">{data.label}</p>
+              <p className="mt-1 text-xs leading-snug text-zinc-400">{data.description}</p>
+              {data.youtubeId && (
+                <div className="mt-2 aspect-video w-full overflow-hidden rounded-md bg-black">
+                  <iframe
+                    className="h-full w-full"
+                    src={`https://www.youtube.com/embed/${data.youtubeId}?rel=0`}
+                    title={`${data.label} video`}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              )}
+            </div>
+            <div className="h-2 w-full shrink-0" />
           </div>
         )}
       </div>

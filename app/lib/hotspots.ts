@@ -10,6 +10,8 @@ export type Hotspot = {
    * materials in public/models/pulsar.glb (HeadLight, SEAT, FrontTyre, etc).
    */
   position: [number, number, number];
+  /** Optional YouTube video ID — proves a hotspot card can carry more than text. */
+  youtubeId?: string;
 };
 
 export const hotspots: Hotspot[] = [
@@ -26,6 +28,7 @@ export const hotspots: Hotspot[] = [
     description:
       "Grippy tread compound built to last, engineered for confident control across wet and dry roads.",
     position: [0, -0.29, 0.64],
+    youtubeId: "nGmCNl9nRAc",
   },
   {
     id: "seat",
