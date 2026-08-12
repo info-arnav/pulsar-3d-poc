@@ -117,8 +117,8 @@ export const bikeFeatures: BikeFeature[] = [
     description:
       "Twin disc brake setup — disc at the front and rear — paired with single-channel ABS for confident, fade-free stopping in both wet and dry conditions. Tubeless tyres add an extra layer of puncture resilience.",
     specs: ["Front Disc Brake", "Rear Disc Brake", "Single-Channel ABS", "Tubeless Tyres"],
-    targetPosition: [0.2, 0.2, 0.7],
-    cameraOffset: [0.6, 0.6, 0.0],
+    targetPosition: [0, 0.0, 0.7],
+    cameraOffset: [1.0, 0.2, 1.2],
     azimuth: 0.0,
     polar: 1.35,
     distance: 2.4,
