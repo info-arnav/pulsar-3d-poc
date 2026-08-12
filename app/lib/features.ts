@@ -2,10 +2,12 @@
  * Bajaj Pulsar 150 — Twin Disc / Split Seat Variant
  * Feature Definitions for the Interactive Introduction Page
  *
- * Camera View Parameters (using direct world-space and spherical math):
- * - targetPosition: world-space coordinate [x, y, z] to look AT
- * - cameraPosition: world-space coordinate [x, y, z] where the camera is physically located
- * - spherical: nested spherical offset values relative to targetPosition
+ * Camera View Parameters (tunable via the Coordinate Inspector):
+ * - targetPosition: normalized [x, y, z] — where camera looks AT on the model
+ * - cameraOffset:   world-space offset added to targetPosition for camera position
+ * - azimuth:        horizontal rotation (radians)
+ * - polar:          vertical elevation (radians, π/2 = equator)
+ * - distance:       camera distance from target (zoom)
  */
 
 export type BikeFeature = {
@@ -17,12 +19,10 @@ export type BikeFeature = {
   description: string;
   specs: string[];
   targetPosition: [number, number, number];
-  cameraPosition: [number, number, number];
-  spherical: {
-    distance: number;
-    polar: number;
-    azimuth: number;
-  };
+  cameraOffset: [number, number, number];
+  azimuth: number;
+  polar: number;
+  distance: number;
 };
 
 export const bikeFeatures: BikeFeature[] = [
@@ -36,13 +36,11 @@ export const bikeFeatures: BikeFeature[] = [
     description:
       "Air-cooled, 4-stroke, single-cylinder engine with Bajaj's patented Digital Twin Spark Ignition (DTS-i) technology — two spark plugs per cylinder for faster, more complete combustion, yielding superior fuel efficiency and a punchy mid-range response.",
     specs: ["149.5 cc Displacement", "14 PS @ 8,500 RPM", "13.25 Nm @ 6,500 RPM", "DTS-i Twin Spark"],
-    targetPosition: [1.1637, -0.0890, 1.0000],
-    cameraPosition: [1.1637, 0.5688, 0.2586],
-    spherical: {
-      distance: 0.9912,
-      polar: 0.845,
-      azimuth: 3.1416,
-    },
+    targetPosition: [0, -0.05, -0.1],
+    cameraOffset: [2.0, 0.4, 0.5],
+    azimuth: Math.PI / 6,
+    polar: 1.4,
+    distance: 2.5,
   },
   {
     id: "gearbox",
@@ -53,13 +51,11 @@ export const bikeFeatures: BikeFeature[] = [
     description:
       "Constant-mesh 5-speed manual gearbox with optimised gear ratios designed to keep the engine in its power band at all speeds — from city traffic crawls to open-road cruising.",
     specs: ["5-Speed Manual", "Constant Mesh", "Return-Shift Pattern", "Optimised Gear Ratios"],
-    targetPosition: [0, 0.4, 0],
-    cameraPosition: [2.0, 0.7, 0.4],
-    spherical: {
-      distance: 2.6,
-      polar: 1.45,
-      azimuth: 0.6,
-    },
+    targetPosition: [0, -0.1, -0.05],
+    cameraOffset: [2.0, 0.3, 0.4],
+    azimuth: Math.PI / 5,
+    polar: 1.45,
+    distance: 2.6,
   },
 
   // ── LIGHTING ─────────────────────────────────────────────────────────────
@@ -72,13 +68,11 @@ export const bikeFeatures: BikeFeature[] = [
     description:
       "Iconic Wolf-Eye halogen headlamp design flanked by twin LED pilot lamps — the signature face of the Pulsar. Carbon-fibre-textured tank shrouds and pilot lamp housings give it an unmistakably predatory stance.",
     specs: ["Wolf-Eye Design", "Twin LED Pilots", "Halogen Main Beam", "Carbon-Fibre Shrouds"],
-    targetPosition: [0, 0.8, 0.7],
-    cameraPosition: [0.5, 1.1, 2.1],
-    spherical: {
-      distance: 2.2,
-      polar: 1.2,
-      azimuth: 0.0,
-    },
+    targetPosition: [0, 0.37, 0.6],
+    cameraOffset: [0.5, 0.3, 1.4],
+    azimuth: 0.0,
+    polar: 1.2,
+    distance: 2.2,
   },
   {
     id: "tail-light",
@@ -89,13 +83,11 @@ export const bikeFeatures: BikeFeature[] = [
     description:
       "Aggressive LED tail light cluster styled to echo the Wolf-Eye theme at the rear. Integrated brake light flash pattern and wide-angle illumination ensure maximum visibility in all conditions.",
     specs: ["Full LED Cluster", "Integrated Brake Flash", "165° Visibility", "Razor-Edge Styling"],
-    targetPosition: [0, 0.9, -0.85],
-    cameraPosition: [-0.8, 1.4, -2.65],
-    spherical: {
-      distance: 2.2,
-      polar: 1.15,
-      azimuth: Math.PI,
-    },
+    targetPosition: [0, 0.45, -0.85],
+    cameraOffset: [-0.8, 0.5, -1.8],
+    azimuth: Math.PI,
+    polar: 1.15,
+    distance: 2.2,
   },
 
   // ── INSTRUMENTATION ───────────────────────────────────────────────────────
@@ -109,12 +101,10 @@ export const bikeFeatures: BikeFeature[] = [
       "Semi-digital instrument cluster blending a sharp digital speedometer, trip meter, and fuel gauge with an analogue tachometer — giving you instant readouts at a glance without sacrificing the visceral feel of a needle in the red.",
     specs: ["Digital Speedometer", "Analog Tachometer", "Trip Meter", "Fuel Gauge"],
     targetPosition: [0.0762, 0.5729, 0.4185],
-    cameraPosition: [-0.1816, 1.8893, -0.3176],
-    spherical: {
-      distance: 1.8,
-      polar: 0.5345,
-      azimuth: -2.9472,
-    },
+    cameraOffset: [-0.1771, 1.5489, -0.8997],
+    azimuth: -2.9472,
+    polar: 0.5345,
+    distance: 1.8,
   },
 
   // ── BRAKING ───────────────────────────────────────────────────────────────
@@ -128,12 +118,10 @@ export const bikeFeatures: BikeFeature[] = [
       "Twin disc brake setup — disc at the front and rear — paired with single-channel ABS for confident, fade-free stopping in both wet and dry conditions. Tubeless tyres add an extra layer of puncture resilience.",
     specs: ["Front Disc Brake", "Rear Disc Brake", "Single-Channel ABS", "Tubeless Tyres"],
     targetPosition: [0.2, 0.2, 0.7],
-    cameraPosition: [0.8, 0.8, 0.7],
-    spherical: {
-      distance: 2.4,
-      polar: 1.35,
-      azimuth: 0.0,
-    },
+    cameraOffset: [0.6, 0.6, 0.0],
+    azimuth: 0.0,
+    polar: 1.35,
+    distance: 2.4,
   },
 
   // ── SUSPENSION ────────────────────────────────────────────────────────────
@@ -146,13 +134,11 @@ export const bikeFeatures: BikeFeature[] = [
     description:
       "Anti-friction bush telescopic front fork soaks up road imperfections with a measured, controlled stroke — keeping the front wheel tracking true even over broken surfaces without transmitting harshness to the rider.",
     specs: ["Telescopic Design", "Anti-Friction Bush", "130mm Travel", "Progressive Damping"],
-    targetPosition: [0, 0.515, 0.937],
-    cameraPosition: [0.995, 0.715, 2.137],
-    spherical: {
-      distance: 2.4,
-      polar: 1.35,
-      azimuth: 0.0,
-    },
+    targetPosition: [0, 0.0, 0.7],
+    cameraOffset: [1.0, 0.2, 1.2],
+    azimuth: 0.0,
+    polar: 1.35,
+    distance: 2.4,
   },
   {
     id: "rear-shocks",
@@ -163,13 +149,11 @@ export const bikeFeatures: BikeFeature[] = [
     description:
       "Twin gas-charged Nitrox shock absorbers at the rear deliver plush ride quality while maintaining sharp cornering composure. Adjustable spring preload lets you tune the setup to your load and riding style.",
     specs: ["Twin Nitrox Units", "Gas-Charged", "5-Step Preload", "Enhanced Stability"],
-    targetPosition: [0, 0.4, -0.4],
-    cameraPosition: [1.5, 0.7, -1.6],
-    spherical: {
-      distance: 2.4,
-      polar: 1.35,
-      azimuth: 2.35,
-    },
+    targetPosition: [0, -0.15, -0.4],
+    cameraOffset: [1.5, 0.3, -1.2],
+    azimuth: (3 * Math.PI) / 4,
+    polar: 1.35,
+    distance: 2.4,
   },
 ];
 

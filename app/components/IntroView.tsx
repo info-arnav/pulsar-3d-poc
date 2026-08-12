@@ -63,14 +63,15 @@ function CoordinateInspector({
       </div>
       {data ? (
         <div className="coord-body">
-          <div className="coord-row"><span className="coord-label">Target Position</span><span className="coord-value coord-red">{f3(data.targetPosition)}</span></div>
-          <div className="coord-row"><span className="coord-label">Camera Position</span><span className="coord-value">{f3(data.cameraPosition)}</span></div>
-          <div className="coord-row"><span className="coord-label">World Hit Point</span><span className="coord-value">{f3(data.worldHit)}</span></div>
-          <div className="coord-row"><span className="coord-label">Normalized Hit</span><span className="coord-value">{f3(data.normalizedHit)}</span></div>
+          <div className="coord-row"><span className="coord-label">Normalized Hit</span><span className="coord-value coord-red">{f3(data.normalizedHit)}</span></div>
+          <div className="coord-row"><span className="coord-label">World Hit</span><span className="coord-value">{f3(data.worldHit)}</span></div>
+          <div className="coord-row"><span className="coord-label">Camera Pos</span><span className="coord-value">{f3(data.cameraPosition)}</span></div>
+          <div className="coord-row"><span className="coord-label">Orbit Target</span><span className="coord-value">{f3(data.orbitTarget)}</span></div>
+          <div className="coord-row"><span className="coord-label">Cam Offset</span><span className="coord-value">{f3(data.cameraOffset)}</span></div>
           <div className="coord-divider" />
-          <div className="coord-row"><span className="coord-label">Spherical Dist</span><span className="coord-value coord-green">{f(data.spherical.distance)}</span></div>
-          <div className="coord-row"><span className="coord-label">Spherical Polar</span><span className="coord-value coord-amber">{f(data.spherical.polar)}</span></div>
-          <div className="coord-row"><span className="coord-label">Spherical Azimuth</span><span className="coord-value coord-amber">{f(data.spherical.azimuth)}</span></div>
+          <div className="coord-row"><span className="coord-label">Azimuth (rad)</span><span className="coord-value coord-amber">{f(data.azimuth)}</span></div>
+          <div className="coord-row"><span className="coord-label">Polar (rad)</span><span className="coord-value coord-amber">{f(data.polar)}</span></div>
+          <div className="coord-row"><span className="coord-label">Distance (zoom)</span><span className="coord-value coord-green">{f(data.distance)}</span></div>
           <button onClick={onCopy} className="coord-copy-btn">
             {copied ? "✓ Copied!" : "Copy Config"}
           </button>
@@ -136,13 +137,11 @@ export default function IntroView({ interactive = true }: IntroViewProps) {
     if (!coordData) return;
     const config = JSON.stringify(
       {
-        targetPosition: coordData.targetPosition.map((v) => parseFloat(v.toFixed(4))),
-        cameraPosition: coordData.cameraPosition.map((v) => parseFloat(v.toFixed(4))),
-        spherical: {
-          distance: parseFloat(coordData.spherical.distance.toFixed(4)),
-          polar: parseFloat(coordData.spherical.polar.toFixed(4)),
-          azimuth: parseFloat(coordData.spherical.azimuth.toFixed(4)),
-        },
+        targetPosition: coordData.normalizedHit.map((v) => parseFloat(v.toFixed(4))),
+        cameraOffset: coordData.cameraOffset.map((v) => parseFloat(v.toFixed(4))),
+        azimuth: parseFloat(coordData.azimuth.toFixed(4)),
+        polar: parseFloat(coordData.polar.toFixed(4)),
+        distance: parseFloat(coordData.distance.toFixed(4)),
       },
       null,
       2
