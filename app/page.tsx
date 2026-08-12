@@ -2,6 +2,8 @@ import Link from "next/link";
 import FloatingNav from "./components/FloatingNav";
 
 const pocs = [
+  { href: "/intro", title: "✦ Interactive Introduction" },
+  { href: "/intro-1", title: "✦ Locked Introduction" },
   { href: "/model-showcase", title: "1. Model Showcase" },
   { href: "/spec-hotspots", title: "2. Spec Hotspots" },
   { href: "/model-hotspots", title: "3. Model + Hotspots" },
