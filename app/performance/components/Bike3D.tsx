@@ -115,7 +115,7 @@ function Ground() {
     <group>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
         <planeGeometry args={[80, 40]} />
-        <meshStandardMaterial color="#0a0b0e" roughness={0.85} metalness={0.2} />
+        <meshStandardMaterial color="#1a1c27" roughness={0.85} metalness={0.2} />
       </mesh>
       <group ref={lines}>
         {Array.from({ length: 40 }).map((_, i) => (
@@ -137,16 +137,20 @@ function Bike3DInner({ focus }: { focus: FocusKey }) {
       gl={{ antialias: true, powerPreference: "high-performance" }}
       camera={{ position: [4.3, 2.0, 5.6], fov: 38 }}
     >
-      <color attach="background" args={["#08090c"]} />
-      <fog attach="fog" args={["#08090c", 8, 24]} />
-      <hemisphereLight intensity={0.6} groundColor="#0a0b0e" color="#8fbaff" />
+      <color attach="background" args={["#1f222e"]} />
+      <fog attach="fog" args={["#1f222e", 8, 24]} />
+      <hemisphereLight intensity={1.2} groundColor="#1f222e" color="#8fbaff" />
       <directionalLight
         position={[4, 6, 4]}
-        intensity={2.6}
+        intensity={3.5}
         castShadow
-        shadow-mapSize={[1024, 1024]}
-        shadow-camera-far={20}
+        shadow-mapSize={1024}
+        shadow-bias={-0.001}
       />
+      {/* Dedicated studio key lights to illuminate the engine and mechanical core */}
+      <pointLight position={[1.2, 0.7, 1.2]} intensity={6.0} distance={3} decay={1.5} color="#ffffff" />
+      <pointLight position={[-1.2, 0.7, 1.2]} intensity={6.0} distance={3} decay={1.5} color="#ffffff" />
+      <pointLight position={[0, 1.3, 0]} intensity={2.0} distance={2} decay={1.5} color="#ffffff" />
       <spotLight position={[-6, 5, 3]} castShadow={false} intensity={70} color="#ff2b3a" angle={0.8} penumbra={1} />
       <spotLight position={[5, 3, -4]} intensity={30} color="#06b6d4" angle={0.9} penumbra={1} />
       <Ground />

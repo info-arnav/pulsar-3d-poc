@@ -41,7 +41,7 @@ export const FOCUS_TARGETS: Record<FocusKey, FocusTarget> = {
       ["Redline", "10,500 rpm"],
       ["Fueling", "Ride-by-wire"],
     ],
-    camera: [3.2, 1.5, 4.2],
+    camera: [1.3, 0.8, 1.4],
     target: [0.05, 0.62, 0],
   },
   console: {
@@ -54,8 +54,8 @@ export const FOCUS_TARGETS: Record<FocusKey, FocusTarget> = {
       ["Telemetry", "Live 60 Hz"],
       ["Connectivity", "BT + Nav"],
     ],
-    camera: [2.5, 2.05, 3.0],
-    target: [0.98, 1.28, 0.05],
+    camera: [0.15, 1.7, 0.7],
+    target: [0.65, 1.15, 0.0],
   },
   wheels: {
     label: "Wheels & Brakes",
@@ -80,8 +80,8 @@ export const FOCUS_TARGETS: Record<FocusKey, FocusTarget> = {
       ["Valve", "Electronic"],
       ["Note", "Hard single"],
     ],
-    camera: [-2.5, 1.15, 3.9],
-    target: [-0.5, 0.45, 0.15],
+    camera: [-1.4, 0.7, 1.6],
+    target: [-0.6, 0.5, 0.0],
   },
   chassis: {
     label: "Chassis",
@@ -93,8 +93,8 @@ export const FOCUS_TARGETS: Record<FocusKey, FocusTarget> = {
       ["Rear", "Nitrox monoshock"],
       ["Wheelbase", "1,357 mm"],
     ],
-    camera: [-3.2, 1.7, 4.4],
-    target: [-0.4, 0.75, 0],
+    camera: [0.0, 1.1, 3.2],
+    target: [0.0, 0.75, 0.0],
   },
   lighting: {
     label: "Lighting",
@@ -106,8 +106,8 @@ export const FOCUS_TARGETS: Record<FocusKey, FocusTarget> = {
       ["Tail", "LED stack"],
       ["Indicators", "Sequential"],
     ],
-    camera: [3.6, 1.9, 3.2],
-    target: [1.2, 1.2, 0.05],
+    camera: [1.9, 1.3, 1.2],
+    target: [0.95, 1.05, 0.0],
   },
 };
 

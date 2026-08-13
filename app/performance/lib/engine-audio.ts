@@ -106,10 +106,14 @@ export class EngineAudio {
   update(rpm: number, throttle: number, load: number) {
     if (!this.ready || !this.ctx || !this.src || !this.gain || !this.filter) return;
     const t = this.ctx.currentTime;
-    const n = Math.max(0, Math.min(1, (rpm - 1200) / 9300));
-    const rate = 0.62 + n * 1.85;
+    const n = Math.max(0, rpm / 10500);
+    const rate = 0.25 + n * 1.8;
     this.src.playbackRate.setTargetAtTime(rate, t, 0.06);
-    const vol = 0.16 + n * 0.5 + throttle * 0.3 + load * 0.05;
+
+    let vol = 0.16 + n * 0.5 + throttle * 0.3 + load * 0.05;
+    if (rpm < 600) {
+      vol *= Math.max(0, rpm / 600);
+    }
     this.gain.gain.setTargetAtTime(Math.min(1, vol), t, 0.09);
     this.filter.frequency.setTargetAtTime(600 + n * 6500 + throttle * 2200, t, 0.09);
   }
