@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=Inter+Tight:wght@300;400;500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 /* Palette pulled from bajajauto.com/pulsarunderground: cyber-black bg, red accent, electric-blue secondary. */
@@ -663,4 +663,26 @@ body {
   color: rgba(255, 255, 255, 0.2);
   text-align: center;
   line-height: 1.55;
+}
+
+/* ─── PERFORMANCE SIMULATOR CUSTOM CLASSES ───────────────────────────────── */
+
+.font-display {
+  font-family: 'Chakra Petch', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.panel {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(20, 20, 22, 0.72);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.9);
+}
+
+.glow-red {
+  background:
+    radial-gradient(60% 45% at 12% 78%, rgba(254, 1, 0, 0.15), transparent 70%),
+    radial-gradient(50% 40% at 88% 20%, rgba(0, 229, 255, 0.1), transparent 70%);
 }

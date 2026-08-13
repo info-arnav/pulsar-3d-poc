@@ -7,6 +7,7 @@ const pocs = [
   { href: "/model-showcase", title: "1. Model Showcase" },
   { href: "/spec-hotspots", title: "2. Spec Hotspots" },
   { href: "/model-hotspots", title: "3. Model + Hotspots" },
+  { href: "/performance", title: "4. Performance Simulator" },
 ];
 
 export default function Home() {
