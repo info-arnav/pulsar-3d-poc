@@ -28,8 +28,8 @@ export const FOCUS_TARGETS: Record<FocusKey, FocusTarget> = {
       ["Peak torque", "28.5 Nm"],
       ["Kerb weight", "163 kg"],
     ],
-    camera: [4.3, 2.0, 5.6],
-    target: [0, 0.85, 0],
+    camera: [5.2, 2.2, 6.8],
+    target: [0, 0.5, 0],
   },
   engine: {
     label: "Engine",
@@ -67,8 +67,8 @@ export const FOCUS_TARGETS: Record<FocusKey, FocusTarget> = {
       ["Tyres", "110/70 - 150/60"],
       ["ABS", "Dual channel"],
     ],
-    camera: [2.8, 1.0, 3.9],
-    target: [0.95, 0.42, 0],
+    camera: [1.7, 0.7, 1.7],
+    target: [0.5, 0.42, 0.0],
   },
   exhaust: {
     label: "Exhaust",
@@ -93,8 +93,8 @@ export const FOCUS_TARGETS: Record<FocusKey, FocusTarget> = {
       ["Rear", "Nitrox monoshock"],
       ["Wheelbase", "1,357 mm"],
     ],
-    camera: [0.0, 1.1, 3.2],
-    target: [0.0, 0.75, 0.0],
+    camera: [0.0, 1.1, 4.4],
+    target: [-0.3, 0.15, 0.0],
   },
   lighting: {
     label: "Lighting",
