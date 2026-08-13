@@ -179,8 +179,10 @@ class Sim {
 
     // automatic gearbox
     if (s.auto && this.shiftCooldown <= 0) {
-      if (s.rpm > 9400 && s.gear < GEARS.length) this.shift(1);
-      else if (s.rpm < 3400 && s.gear > 1 && v > 2) this.shift(-1);
+      const shiftUpPoint = currentRedline - 1100;
+      const shiftDownPoint = currentRedline * 0.38;
+      if (s.rpm > shiftUpPoint && s.gear < GEARS.length) this.shift(1);
+      else if (s.rpm < shiftDownPoint && s.gear > 1 && v > 2) this.shift(-1);
     }
 
     // visuals

@@ -13,6 +13,9 @@ export function RideControls() {
   const input = useRef({ throttle: false, brake: false });
 
   useEffect(() => {
+    // Preload audio files in the background immediately
+    void engineAudio.preload();
+
     sim.onShift = (dir) => engineAudio.shift(dir);
     sim.start();
 
@@ -91,7 +94,7 @@ export function RideControls() {
   return (
     <div className="panel grid gap-4 p-4">
       <div className="flex items-center justify-between">
-        <span className="text-[10px] tracking-[0.24em] text-muted-foreground uppercase">Rider inputs</span>
+        <span className="text-[10px] tracking-[0.24em] text-zinc-500 uppercase">Rider inputs</span>
         <div className="flex gap-2">
           <button
             onClick={() => {
@@ -170,7 +173,7 @@ export function RideControls() {
       </div>
 
       <div className="flex items-center justify-between border-t border-zinc-800/80 pt-3">
-        <span className="text-[10px] tracking-[0.24em] text-muted-foreground uppercase">Power Mode</span>
+        <span className="text-[10px] tracking-[0.24em] text-zinc-500 uppercase">Power Mode</span>
         <div className="flex gap-1.5">
           {(["eco", "normal", "sports"] as const).map((m) => (
             <button

@@ -12,33 +12,62 @@ export class EngineAudio {
   private brakeGain: GainNode | null = null;
   ready = false;
   muted = false;
+  private preloaded = false;
+  private preloadPromise: Promise<void> | null = null;
+
+  preload() {
+    if (this.preloaded) return Promise.resolve();
+    if (this.preloadPromise) return this.preloadPromise;
+
+    this.preloadPromise = (async () => {
+      try {
+        const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+        const ctx = new Ctx();
+        this.ctx = ctx;
+
+        const fetchAndDecode = async (url: string) => {
+          const res = await fetch(url);
+          return await ctx.decodeAudioData(await res.arrayBuffer());
+        };
+
+        const [mainBuf, gearBuf, brakeBuf] = await Promise.all([
+          fetchAndDecode("/Screen Recording 2026-08-13 103747.wav").catch((e) => {
+            console.warn("Failed to load engine WAV:", e);
+            return null;
+          }),
+          fetchAndDecode("/gear.mp3").catch((e) => {
+            console.warn("Failed to load gear audio:", e);
+            return null;
+          }),
+          fetchAndDecode("/brake.mp3").catch((e) => {
+            console.warn("Failed to load brake audio:", e);
+            return null;
+          }),
+        ]);
+
+        this.buffer = mainBuf;
+        this.gearBuffer = gearBuf;
+        this.brakeBuffer = brakeBuf;
+        this.preloaded = true;
+      } catch (e) {
+        console.error("Audio preloading failed:", e);
+      }
+    })();
+
+    return this.preloadPromise;
+  }
 
   async init() {
-    if (this.ctx) {
-      await this.ctx.resume();
+    if (this.ready) {
+      if (this.ctx && this.ctx.state === "suspended") {
+        await this.ctx.resume();
+      }
       return;
     }
-    const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    const ctx = new Ctx();
-    this.ctx = ctx;
-    const res = await fetch("/Screen Recording 2026-08-13 103747.wav");
-    this.buffer = await ctx.decodeAudioData(await res.arrayBuffer());
 
-    // Preload gear shift sound
-    try {
-      const gearRes = await fetch("/gear.mp3");
-      this.gearBuffer = await ctx.decodeAudioData(await gearRes.arrayBuffer());
-    } catch (e) {
-      console.warn("Failed to load gear shift sound:", e);
-    }
-
-    // Preload brake squeal sound
-    try {
-      const brakeRes = await fetch("/brake.mp3");
-      this.brakeBuffer = await ctx.decodeAudioData(await brakeRes.arrayBuffer());
-    } catch (e) {
-      console.warn("Failed to load brake squeal sound:", e);
-    }
+    await this.preload();
+    const ctx = this.ctx;
+    if (!ctx) return;
 
     this.master = ctx.createGain();
     this.master.gain.value = this.muted ? 0 : 0.9;
@@ -101,18 +130,6 @@ export class EngineAudio {
       gearSrc.start(t);
     }
 
-    const o = this.ctx.createOscillator();
-    const g = this.ctx.createGain();
-    o.type = "square";
-    o.frequency.setValueAtTime(dir > 0 ? 220 : 160, t);
-    o.frequency.exponentialRampToValueAtTime(dir > 0 ? 90 : 70, t + 0.09);
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(0.22, t + 0.008);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.13);
-    o.connect(g);
-    g.connect(this.master);
-    o.start(t);
-    o.stop(t + 0.15);
     if (this.gain) {
       this.gain.gain.setTargetAtTime(this.gain.gain.value * 0.35, t, 0.02);
     }

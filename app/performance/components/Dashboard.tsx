@@ -14,7 +14,7 @@ function Readout({
 }) {
   return (
     <div className="panel px-4 py-3">
-      <div className="text-[10px] tracking-[0.22em] text-muted-foreground uppercase">{label}</div>
+      <div className="text-[10px] tracking-[0.22em] text-zinc-400 uppercase">{label}</div>
       <div className="mt-1 flex items-baseline gap-1">
         <span
           ref={refEl}
@@ -22,7 +22,7 @@ function Readout({
         >
           0
         </span>
-        <span className="text-[10px] tracking-wider text-muted-foreground uppercase">{unit}</span>
+        <span className="text-[10px] tracking-wider text-zinc-500 uppercase">{unit}</span>
       </div>
     </div>
   );
@@ -38,6 +38,8 @@ export function Dashboard() {
   const power = useRef<HTMLSpanElement>(null);
   const bar = useRef<HTMLDivElement>(null);
   const arc = useRef<SVGCircleElement>(null);
+  const redlineLabel = useRef<HTMLSpanElement>(null);
+  const midLabel = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     let frame = 0;
@@ -52,11 +54,20 @@ export function Dashboard() {
       if (throttle.current) throttle.current.textContent = Math.round(s.throttle * 100).toString();
       if (accel.current) accel.current.textContent = s.accel.toFixed(1);
       if (power.current) power.current.textContent = s.power.toFixed(1);
+      const redlines = { eco: 6500, normal: 9000, sports: 10500 };
+      const limit = redlines[s.mode] ?? 9000;
+      const p = Math.min(1, s.rpm / limit);
       if (bar.current) {
-        const p = Math.min(1, s.rpm / 10500);
-        bar.current.style.transform = `scaleX(${p})`;
-        bar.current.style.background =
-          p > 0.9 ? "var(--color-destructive)" : p > 0.72 ? "color-mix(in oklab, var(--color-neon-red) 85%, transparent)" : "var(--color-electric-blue)";
+        bar.current.style.width = `${p * 100}%`;
+        bar.current.style.background = "#fe0100";
+      }
+      if (redlineLabel.current) {
+        const kLimit = (limit / 1000).toFixed(limit % 1000 === 0 ? 0 : 1);
+        redlineLabel.current.textContent = `${kLimit}K REDLINE`;
+      }
+      if (midLabel.current) {
+        const kMid = (limit / 2000).toFixed(limit % 2000 === 0 ? 0 : 1);
+        midLabel.current.textContent = `${kMid}K`;
       }
       if (arc.current) {
         arc.current.style.strokeDashoffset = String(CIRC * (1 - Math.min(1, s.speed / 200)));
@@ -103,34 +114,34 @@ export function Dashboard() {
             <span ref={speed} className="font-display text-5xl leading-none tabular-nums">
               0
             </span>
-            <span className="text-[10px] tracking-[0.28em] text-muted-foreground uppercase">km/h</span>
+            <span className="text-[10px] tracking-[0.28em] text-zinc-400 uppercase">km/h</span>
           </div>
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-end justify-between">
             <div>
-              <div className="text-[10px] tracking-[0.22em] text-muted-foreground uppercase">Engine</div>
+              <div className="text-[10px] tracking-[0.22em] text-zinc-400 uppercase">Engine</div>
               <div className="flex items-baseline gap-1">
                 <span ref={rpm} className="font-display text-3xl tabular-nums">
                   1,250
                 </span>
-                <span className="text-[10px] tracking-wider text-muted-foreground uppercase">rpm</span>
+                <span className="text-[10px] tracking-wider text-zinc-500 uppercase">rpm</span>
               </div>
             </div>
             <div className="text-right">
-              <div className="text-[10px] tracking-[0.22em] text-muted-foreground uppercase">Gear</div>
+              <div className="text-[10px] tracking-[0.22em] text-zinc-400 uppercase">Gear</div>
               <span ref={gear} className="font-display text-4xl leading-none text-neon-red tabular-nums">
                 N
               </span>
             </div>
           </div>
           <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-zinc-800">
-            <div ref={bar} className="h-full w-full origin-left scale-x-0 rounded-full bg-electric-blue" />
+            <div ref={bar} className="h-full rounded-full bg-neon-red transition-all duration-75" style={{ width: "0%" }} />
           </div>
-          <div className="mt-1 flex justify-between text-[9px] tracking-widest text-muted-foreground">
+          <div className="mt-1 flex justify-between text-[9px] tracking-widest text-zinc-500">
             <span>0</span>
-            <span>5K</span>
-            <span className="text-neon-red">10.5K REDLINE</span>
+            <span ref={midLabel}>5K</span>
+            <span ref={redlineLabel} className="text-neon-red font-semibold">10.5K REDLINE</span>
           </div>
         </div>
       </div>
